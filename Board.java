@@ -5,28 +5,27 @@ import java.util.Random;
  * 
  * This class implements the basic behavior of a game board, width and height
  * are defined, two 2-D arrays are used, one is for recording mines position, 
- * the other one is for state change of board. 
+ * the other one is for recording the state of board cells. 
  *
  */
 public abstract class Board {
 	protected int width, height;
 	
 	protected int numMines;
-	
 	protected int numUnknown;
-	
 	protected int numMarked;
 	
 	protected boolean[][] mines;
-	
 	protected int[][] board;
 	
 	public static final int UNKNOWN = -1;
-	
 	public static final int MARKED = -2;
-	
 	public static final int MINE = -3;
 	
+	/**
+	 * Initialize state of cells and mines on game board
+	 */
+	 
 	public Board(int width, int height, int numMines){
 		this.width = width;
 		this.height = height;
@@ -47,6 +46,10 @@ public abstract class Board {
 		int temp = 0;
 		Random rand = new Random();
 		
+		/**
+		 *  Initialize mines in board
+		 */
+		 
 		while (temp < numMines){
 			int cell = rand.nextInt();
 			cell = (cell < 0 ? -cell : cell) % cells;
@@ -57,6 +60,9 @@ public abstract class Board {
 		}				
 	}
 	
+	/**
+	 * needs to be overridden
+	 */
 	public abstract void draw();
 	
 	public int reveal (int x, int y){
@@ -68,7 +74,7 @@ public abstract class Board {
 		if(mines[x][y]){
 			board[x][y] = MINE;
 		} else {
-			board[x][y] = closeMines(x,y);
+			board[x][y] = neighborMines(x,y);
 		}
 		return board[x][y];
 	}
@@ -132,7 +138,7 @@ public abstract class Board {
 		return numUnknown;
 	}
 	
-	private int closeMines(int x, int y){
+	private int neighborMines(int x, int y){
 		int minx, miny,maxx,maxy;
 		minx = (x<=0 ? 0 : x-1);
 		miny = (y<=0 ? 0 : y-1);
